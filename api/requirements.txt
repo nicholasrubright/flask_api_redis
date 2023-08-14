@@ -2,4 +2,6 @@ Flask
 flask-marshmallow
 marshmallow
 injector
+flask-injector
 redis-om
+python-dotenv

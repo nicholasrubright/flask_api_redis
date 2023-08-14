@@ -1,12 +1,5 @@
-from http import HTTPStatus
-from flask import Flask, jsonify
+from src.app import create_app
 
-app = Flask(__name__)
-
-@app.route('/')
-def test():
-    return jsonify({
-        'hello': 'world'
-    }), HTTPStatus.OK
-    
-app.run('0.0.0.0', port=8080)
+if __name__ == '__main__':
+    app = create_app(__name__)
+    app.run('0.0.0.0', port=8080)
