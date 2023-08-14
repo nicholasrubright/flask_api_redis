@@ -1,0 +1,5 @@
+Flask
+flask-marshmallow
+marshmallow
+injector
+redis-om
