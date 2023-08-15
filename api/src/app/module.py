@@ -2,7 +2,8 @@ from flask import Flask
 from injector import Module, singleton
 from src.services import MovieService, MovieCacheService
 from src.models import MovieCacheSchema, MovieSchema
-
+import redis
+from redis import Redis
 
 class AppModule(Module):
     def __init__(self, app: Flask):
@@ -15,6 +16,11 @@ class AppModule(Module):
         binder.bind(MovieService, to=self.getMovieService(), scope=singleton)
         binder.bind(MovieCacheService, to=self.getMovieCacheService(), scope=singleton)
 
+        binder.bind(Redis, to=self.getRedis(), scope=singleton)
+
+    def getRedis(self) -> Redis:
+        return redis.Redis(host=self.app.config['REDIS_HOST'], port=self.app.config['REDIS_PORT'], db=0)
+
     def getMovieSchema(self) -> MovieSchema:
         return MovieSchema()
 
@@ -25,4 +31,4 @@ class AppModule(Module):
         return MovieService(self.getMovieSchema())
 
     def getMovieCacheService(self) -> MovieCacheService:
-        return MovieCacheService(self.getMovieCacheSchema())
+        return MovieCacheService(self.getMovieCacheSchema(), self.getRedis())
