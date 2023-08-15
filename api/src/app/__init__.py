@@ -4,7 +4,6 @@ from src.routes import movies_bp
 from src.app.module import AppModule
 from injector import Injector
 from flask_injector import FlaskInjector
-from redis_om import Migrator, get_redis_connection
 
 
 def create_config() -> Config:
@@ -24,8 +23,5 @@ def create_app(name: str) -> Flask:
 
     FlaskInjector(app=app, injector=injector)
 
-    redis = get_redis_connection()
-    redis.migrate()
-    Migrator().run()
 
     return app

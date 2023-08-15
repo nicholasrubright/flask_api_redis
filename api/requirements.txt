@@ -3,5 +3,5 @@ flask-marshmallow
 marshmallow
 injector
 flask-injector
-redis-om
+redis
 python-dotenv
