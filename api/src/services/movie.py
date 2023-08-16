@@ -1,7 +1,10 @@
 from src.models import Movie, MovieSchema, MovieCache, MovieCacheSchema
 from injector import inject
 from redis import Redis
+from redis.commands.json.path import Path
+
 test_movies = [Movie(1, "test movie"), Movie(2, "another test movie")]
+
 
 # Notes: https://redis.readthedocs.io/en/stable/examples/search_json_examples.html
 # Movie Cache
@@ -17,7 +20,7 @@ class MovieCacheService:
             print("testing: ", movieCache, flush=True)
             data = self.movieCacheSchema.dump(movieCache)
             print("test: ", str(movieCache.id), flush=True)
-            self.redis.set(str(movieCache.id), str(data))
+            self.redis.json().set(f"cache{movieCache.id}", Path.root_path(), data)
         except Exception as err:
             print("There was a problem creating the cache: ", err, flush=True)
 
