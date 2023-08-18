@@ -25,9 +25,12 @@ class MovieCacheService:
     def getMovieCache(self, id: str):
         try:
             data = self.redis.getJSONDocument(id)
-            print("get movie cache json: ", data, flush=True)
+
+            if data == None:
+                print("Data was blank: ", data, flush=True)
+                return None
+
             data_obj = json.loads(data)
-            print("data_obj: ", data_obj, flush=True)
             movieCache = self.movieCacheSchema.load(data_obj)
             return movieCache
         except Exception as err:

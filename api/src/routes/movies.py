@@ -22,6 +22,7 @@ def get_movies(movieService: MovieService, movieCacheService: MovieCacheService)
 def get_movie_cache(movieCacheService: MovieCacheService):
     try:
         data = movieCacheService.getMovieCache("1")
+
         return jsonify(data), HTTPStatus.FOUND
     except:
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
