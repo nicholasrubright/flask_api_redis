@@ -18,19 +18,20 @@ class MovieCacheService:
         try:
             movieCache = MovieCache(1, movies)
             data = self.movieCacheSchema.dump(movieCache)
-            self.redis.addDocument(movieCache.id, data)
+            self.redis.addJSONDocument(str(movieCache.id), str(data))
         except Exception as err:
             print("There was a problem creating the cache: ", err, flush=True)
 
-    def getMovieCache(self, id):
+    def getMovieCache(self, id: str):
         try:
-            data = self.redis.getDocument(id)
-
+            data = self.redis.getJSONDocument(id)
+            print("get movie cache json: ", data, flush=True)
             data_obj = json.loads(data)
+            print("data_obj: ", data_obj, flush=True)
             movieCache = self.movieCacheSchema.load(data_obj)
             return movieCache
         except Exception as err:
-            print("Error: ", err, flush=True)
+            print("Error getting movie cache: ", err, flush=True)
 
 
 # Main movie service

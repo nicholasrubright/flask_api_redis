@@ -21,7 +21,7 @@ def get_movies(movieService: MovieService, movieCacheService: MovieCacheService)
 @movies_bp.route("/test", methods=["GET"])
 def get_movie_cache(movieCacheService: MovieCacheService):
     try:
-        data = movieCacheService.getMovieCache(1)
+        data = movieCacheService.getMovieCache("1")
         return jsonify(data), HTTPStatus.FOUND
     except:
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
