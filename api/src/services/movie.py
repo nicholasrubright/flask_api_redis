@@ -1,7 +1,7 @@
 from src.models import Movie, MovieSchema, MovieCache, MovieCacheSchema
 from injector import inject
-from redis import Redis
-from redis.commands.json.path import Path
+from src.services.redis import RedisClient
+import json
 
 test_movies = [Movie(1, "test movie"), Movie(2, "another test movie")]
 
@@ -10,19 +10,27 @@ test_movies = [Movie(1, "test movie"), Movie(2, "another test movie")]
 # Movie Cache
 class MovieCacheService:
     @inject
-    def __init__(self, movieCacheSchema: MovieCacheSchema, redis: Redis):
+    def __init__(self, movieCacheSchema: MovieCacheSchema, redis: RedisClient):
         self.movieCacheSchema = movieCacheSchema
         self.redis = redis
 
     def createMovieCache(self, movies):
         try:
             movieCache = MovieCache(1, movies)
-            print("testing: ", movieCache, flush=True)
             data = self.movieCacheSchema.dump(movieCache)
-            print("test: ", str(movieCache.id), flush=True)
-            self.redis.json().set(f"cache{movieCache.id}", Path.root_path(), data)
+            self.redis.addDocument(movieCache.id, data)
         except Exception as err:
             print("There was a problem creating the cache: ", err, flush=True)
+
+    def getMovieCache(self, id):
+        try:
+            data = self.redis.getDocument(id)
+
+            data_obj = json.loads(data)
+            movieCache = self.movieCacheSchema.load(data_obj)
+            return movieCache
+        except Exception as err:
+            print("Error: ", err, flush=True)
 
 
 # Main movie service
