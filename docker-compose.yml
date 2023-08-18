@@ -10,10 +10,9 @@ services:
       - redis
   redis:
     container_name: redis
-    image: redis/redis-stack-server:latest
+    image: redis/redis-stack:latest
     ports:
       - 6379:6379
-    command: redis-server --save 20 1 --loglevel warning
     volumes:
       - redis:/data
 
